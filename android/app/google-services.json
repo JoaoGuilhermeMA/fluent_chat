@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "103076873979",
+    "project_id": "fluent-chat-joao-gui",
+    "storage_bucket": "fluent-chat-joao-gui.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103076873979:android:87c343d6c430b9e2e0925e",
+        "android_client_info": {
+          "package_name": "br.com.joao.guilherme.fluent_chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIh19BLGWh8z-eJbgvy0IHdp3vORDi8Jc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
