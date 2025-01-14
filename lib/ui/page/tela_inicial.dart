@@ -1,3 +1,4 @@
+import 'package:fluent_chat/ui/page/reconhecer_fala.dart';
 import 'package:flutter/material.dart';
 
 class TelaInicial extends StatefulWidget {
@@ -12,10 +13,11 @@ class TelaInicial extends StatefulWidget {
 class _MyHomePageState extends State<TelaInicial> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text('Home'),
+  static List<Widget> _widgetOptions = <Widget>[
+    SpeechToTextExample(),
     Text('Carrinho'),
-    Text('Usuários')
+    Text('Comunidade'),
+    Text("Perfil")
   ];
   void _onItemSelected(int index) {
     setState(() {
@@ -36,9 +38,9 @@ class _MyHomePageState extends State<TelaInicial> {
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: "Home"),
-          NavigationDestination(
-              icon: Icon(Icons.shopping_cart), label: 'Carrinho'),
-          NavigationDestination(icon: Icon(Icons.person), label: 'Usuários'),
+          NavigationDestination(icon: Icon(Icons.speaker), label: 'Fala'),
+          NavigationDestination(icon: Icon(Icons.people), label: 'Comunidade'),
+          NavigationDestination(icon: Icon(Icons.person), label: 'Perfil'),
         ],
         onDestinationSelected: _onItemSelected,
         selectedIndex: _selectedIndex,
