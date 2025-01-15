@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_chat/service/auth_service.dart';
+import 'package:fluent_chat/ui/page/cadastrar_perfil.dart';
 import 'package:fluent_chat/ui/widgets/custom_button.dart';
 import 'package:fluent_chat/ui/widgets/custom_password_form_field.dart';
 import 'package:fluent_chat/ui/widgets/custom_text_form_field.dart';
@@ -33,8 +35,21 @@ class _RegisterPageState extends State<RegisterPage> {
     final AuthService authService =
         Provider.of<AuthService>(context, listen: false);
     try {
-      await authService.signUpWithEmailAndPassword(
-          emailController.value.text, passwordController.value.text);
+      UserCredential credential = await authService.signUpWithEmailAndPassword(
+        emailController.value.text,
+        passwordController.value.text,
+      );
+
+      // Navegar para a tela de cadastrar perfil
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CadastrarPerfil(
+            userId: credential.user!.uid,
+            email: emailController.value.text,
+          ),
+        ),
+      );
     } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
