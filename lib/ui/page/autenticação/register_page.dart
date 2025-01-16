@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_chat/service/auth_service.dart';
-import 'package:fluent_chat/ui/page/cadastrar_perfil.dart';
+import 'package:fluent_chat/ui/page/autentica%C3%A7%C3%A3o/cadastrar_perfil.dart';
 import 'package:fluent_chat/ui/widgets/custom_button.dart';
 import 'package:fluent_chat/ui/widgets/custom_password_form_field.dart';
 import 'package:fluent_chat/ui/widgets/custom_text_form_field.dart';

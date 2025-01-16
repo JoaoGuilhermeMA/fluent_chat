@@ -1,4 +1,4 @@
-import 'package:fluent_chat/ui/page/login_or_register_page.dart';
+import 'package:fluent_chat/ui/page/autentica%C3%A7%C3%A3o/login_or_register_page.dart';
 import 'package:fluent_chat/ui/page/tela_inicial.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

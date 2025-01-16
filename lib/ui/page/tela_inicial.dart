@@ -1,3 +1,4 @@
+import 'package:fluent_chat/ui/page/comunidade_page.dart';
 import 'package:fluent_chat/ui/page/perfil_page.dart';
 import 'package:fluent_chat/ui/page/reconhecer_fala.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class _MyHomePageState extends State<TelaInicial> {
   static List<Widget> _widgetOptions = <Widget>[
     Text('Pagina inicial'),
     SpeechToTextExample(),
-    Text('Comunidade'),
+    ComunidadePage(),
     PerfilPage(),
   ];
 
