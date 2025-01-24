@@ -1,5 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fluent_chat/ui/widgets/auth_checker.dart';
+import 'package:fluent_chat/presentation/widgets/auth_checker.dart';
 import 'package:fluent_chat/core/di/configure_providers.dart';
 import 'package:fluent_chat/firebase_options.dart';
 import 'package:fluent_chat/theme/theme.dart';

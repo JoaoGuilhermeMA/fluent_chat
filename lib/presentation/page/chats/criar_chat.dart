@@ -1,6 +1,6 @@
-import 'package:fluent_chat/service/auth_service.dart';
-import 'package:fluent_chat/service/chats_publicos_services.dart';
-import 'package:fluent_chat/service/firebase_storage_service.dart';
+import 'package:fluent_chat/data/service/auth_service.dart';
+import 'package:fluent_chat/data/service/chats_publicos_services.dart';
+import 'package:fluent_chat/data/service/firebase_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';

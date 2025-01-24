@@ -1,4 +1,4 @@
-import 'package:fluent_chat/ui/page/chats/tela_chat.dart';
+import 'package:fluent_chat/presentation/page/chats/tela_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

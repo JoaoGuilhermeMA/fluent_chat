@@ -1,5 +1,5 @@
-import 'package:fluent_chat/service/auth_service.dart';
-import 'package:fluent_chat/service/usuario_service.dart'; // Importando o UsuarioService
+import 'package:fluent_chat/data/service/auth_service.dart';
+import 'package:fluent_chat/data/service/usuario_service.dart'; // Importando o UsuarioService
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 

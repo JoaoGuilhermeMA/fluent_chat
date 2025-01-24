@@ -1,7 +1,7 @@
-import 'package:fluent_chat/service/auth_service.dart';
-import 'package:fluent_chat/ui/widgets/custom_button.dart';
-import 'package:fluent_chat/ui/widgets/custom_password_form_field.dart';
-import 'package:fluent_chat/ui/widgets/custom_text_form_field.dart';
+import 'package:fluent_chat/data/service/auth_service.dart';
+import 'package:fluent_chat/presentation/widgets/custom_button.dart';
+import 'package:fluent_chat/presentation/widgets/custom_password_form_field.dart';
+import 'package:fluent_chat/presentation/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

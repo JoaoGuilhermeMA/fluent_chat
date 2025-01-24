@@ -1,5 +1,5 @@
-import 'package:fluent_chat/service/auth_service.dart';
-import 'package:fluent_chat/service/usuario_service.dart';
+import 'package:fluent_chat/data/service/auth_service.dart';
+import 'package:fluent_chat/data/service/usuario_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
