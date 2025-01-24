@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluent_chat/domain/entities/perfil.dart';
 import 'dart:io';
 import 'firebase_storage_service.dart';
-import 'package:fluent_chat/model/User.dart';
 
 class UsuarioService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

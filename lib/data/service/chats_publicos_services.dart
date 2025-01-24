@@ -4,7 +4,6 @@ class ChatPublicoService {
   final CollectionReference chatPublicoCollection =
       FirebaseFirestore.instance.collection('chatPublico');
 
-  // Criar uma nova comunidade com a URL da imagem
   Future<void> criarComunidade(String chatNome, String descricao,
       String adminEmail, String imagemUrl) async {
     try {
@@ -19,7 +18,6 @@ class ChatPublicoService {
     }
   }
 
-  // Editar uma comunidade
   Future<void> editarComunidade(
       String chatNome, Map<String, dynamic> dadosAtualizados) async {
     try {
