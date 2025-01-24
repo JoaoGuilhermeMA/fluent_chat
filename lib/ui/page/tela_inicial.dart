@@ -1,4 +1,5 @@
 import 'package:fluent_chat/ui/page/comunidade_page.dart';
+import 'package:fluent_chat/ui/page/cursos_page.dart';
 import 'package:fluent_chat/ui/page/perfil_page.dart';
 import 'package:fluent_chat/ui/page/reconhecer_fala.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class _MyHomePageState extends State<TelaInicial> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    Text('Pagina inicial'),
+    CursosPage(),
     SpeechToTextExample(),
     ComunidadePage(),
     PerfilPage(),
@@ -56,7 +57,7 @@ class _MyHomePageState extends State<TelaInicial> {
       ),
       bottomNavigationBar: NavigationBar(
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: "Home"),
+          NavigationDestination(icon: Icon(Icons.home), label: "Cursos"),
           NavigationDestination(icon: Icon(Icons.speaker), label: 'Fala'),
           NavigationDestination(icon: Icon(Icons.people), label: 'Comunidade'),
           NavigationDestination(icon: Icon(Icons.person), label: 'Perfil'),
