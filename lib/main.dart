@@ -6,35 +6,38 @@ import 'package:fluent_chat/theme/theme.dart';
 import 'package:fluent_chat/theme/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Inicializa o Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final data = await ConfigureProviders.createDependencyTree();
+  // Configura os providers
+  final providers = await ConfigureProviders.createDependencyTree();
 
-  runApp(MyApp(data: data));
+  runApp(MyApp(providers: providers.providers));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.data});
+  const MyApp({super.key, required this.providers});
 
-  final ConfigureProviders data;
+  final List<SingleChildWidget> providers;
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    TextTheme textTheme = createTextTheme(context, "Roboto Flex", "Roboto");
+    // Cria o TextTheme uma única vez (evita recriação desnecessária)
+    final textTheme = createTextTheme(context, "Roboto Flex", "Roboto");
+    final theme = MaterialTheme(textTheme);
 
-    MaterialTheme theme = MaterialTheme(textTheme);
     return MultiProvider(
-      providers: data.providers,
+      providers: providers,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Aula',
+        title: 'Fluent Chat',
         theme: theme.light(),
         darkTheme: theme.dark(),
         home: const AuthChecker(),

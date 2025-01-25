@@ -1,8 +1,10 @@
-import 'package:fluent_chat/presentation/page/chats/tela_chat.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:fluent_chat/domain/repositories/chats_publicos_repository.dart';
 import 'chats/criar_chat.dart';
+import 'chats/tela_chat.dart';
 
 class ComunidadePage extends StatefulWidget {
   @override
@@ -25,31 +27,26 @@ class _ComunidadePageState extends State<ComunidadePage> {
 
   Future<void> _fetchPage(DocumentSnapshot? lastDocument) async {
     try {
-      final query = FirebaseFirestore.instance
-          .collection('chatPublico')
-          .orderBy('descricao')
-          .limit(_pageSize);
+      final chatsPublicosRepository =
+          Provider.of<ChatsPublicosRepository>(context, listen: false);
 
-      final querySnapshot = lastDocument == null
-          ? await query.get()
-          : await query.startAfterDocument(lastDocument).get();
-
-      // Inclui o ID do documento nos dados retornados
-      final newItems = querySnapshot.docs.map((doc) {
-        return {
-          'id': doc.id, // Adiciona o ID do documento
-          ...doc.data()
-              as Map<String, dynamic>, // Adiciona os dados do documento
-        };
-      }).toList();
+      final newItems = await chatsPublicosRepository.buscarComunidadesPaginadas(
+        pageSize: _pageSize,
+        lastDocument: lastDocument,
+      );
 
       final isLastPage = newItems.length < _pageSize;
 
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
       } else {
-        final nextPageKey = querySnapshot.docs.last;
-        _pagingController.appendPage(newItems, nextPageKey);
+        final nextPageKey = newItems.isNotEmpty
+            ? FirebaseFirestore.instance
+                .collection('chatPublico')
+                .doc(newItems.last['id'])
+            : null;
+        _pagingController.appendPage(
+            newItems, nextPageKey as DocumentSnapshot<Object?>?);
       }
     } catch (error) {
       print('Erro ao buscar comunidades: $error');

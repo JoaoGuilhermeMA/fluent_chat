@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluent_chat/data/service/auth_service.dart';
+import 'package:fluent_chat/domain/repositories/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,7 +19,7 @@ class _PerfilPageState extends State<PerfilPage> {
   void initState() {
     super.initState();
     // Obtendo o uid do usuário logado, que é único no Firebase Auth
-    userId = Provider.of<AuthService>(context, listen: false)
+    userId = Provider.of<AuthRepository>(context, listen: false)
         .getCurrentUserEmail()!; // A linha para pegar o email do usuário logado
     _userData =
         _getUserData(userId); // Buscando os dados do usuário usando o uid

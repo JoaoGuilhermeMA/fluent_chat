@@ -1,4 +1,4 @@
-import 'package:fluent_chat/data/service/auth_service.dart';
+import 'package:fluent_chat/domain/repositories/auth_repository.dart';
 import 'package:fluent_chat/presentation/widgets/custom_button.dart';
 import 'package:fluent_chat/presentation/widgets/custom_password_form_field.dart';
 import 'package:fluent_chat/presentation/widgets/custom_text_form_field.dart';
@@ -19,10 +19,10 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   void signIn() async {
-    final authService = Provider.of<AuthService>(context, listen: false);
+    final authRepository = Provider.of<AuthRepository>(context, listen: false);
 
     try {
-      await authService.signInWithEmailAndPassword(
+      await authRepository.signInWithEmailAndPassword(
         emailController.value.text,
         passwordController.value.text,
       );

@@ -40,4 +40,39 @@ class ChatsPublicosImpl extends ChatsPublicosRepository {
   Future<void> excluirComunidade(String chatNome) async {
     _chatPublicoService.excluirComunidade(chatNome);
   }
+
+  @override
+  Future<List<Map<String, dynamic>>> buscarComunidadesPaginadas({
+    required int pageSize,
+    DocumentSnapshot? lastDocument,
+  }) async {
+    try {
+      final query = _chatPublicoService.chatPublicoCollection
+          .orderBy('descricao')
+          .limit(pageSize);
+
+      final querySnapshot = lastDocument == null
+          ? await query.get()
+          : await query.startAfterDocument(lastDocument).get();
+
+      // Inclui o ID do documento nos dados retornados
+      final newItems = querySnapshot.docs.map((doc) {
+        return {
+          'id': doc.id, // Adiciona o ID do documento
+          ...doc.data()
+              as Map<String, dynamic>, // Adiciona os dados do documento
+        };
+      }).toList();
+
+      return newItems;
+    } catch (error) {
+      print('Erro ao buscar comunidades paginadas: $error');
+      throw Exception('Erro ao buscar comunidades paginadas');
+    }
+  }
+
+  @override
+  Stream<QuerySnapshot> buscarMensagens(String chatNome) {
+    return _chatPublicoService.buscarMensagens(chatNome);
+  }
 }

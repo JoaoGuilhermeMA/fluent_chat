@@ -1,9 +1,10 @@
-import 'package:fluent_chat/data/service/auth_service.dart';
-import 'package:fluent_chat/data/service/chats_publicos_services.dart';
-import 'package:fluent_chat/data/service/firebase_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:fluent_chat/domain/repositories/auth_repository.dart';
+import 'package:fluent_chat/domain/repositories/chats_publicos_repository.dart';
+import 'package:fluent_chat/domain/repositories/firebase_storage_repository.dart';
 
 class CriarChatPage extends StatefulWidget {
   @override
@@ -14,9 +15,6 @@ class _CriarChatPageState extends State<CriarChatPage> {
   final _formKey = GlobalKey<FormState>();
   final _chatNomeController = TextEditingController();
   final _descricaoController = TextEditingController();
-  final ChatPublicoService _chatService = ChatPublicoService();
-  final FirebaseStorageService _storageService = FirebaseStorageService();
-  final AuthService _authService = AuthService();
   File? _image;
 
   Future<void> _pickImage() async {
@@ -32,6 +30,13 @@ class _CriarChatPageState extends State<CriarChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Acessa os repositórios via Provider
+    final chatsPublicosRepository =
+        Provider.of<ChatsPublicosRepository>(context, listen: false);
+    final storageRepository =
+        Provider.of<FirebaseStorageRepository>(context, listen: false);
+    final authRepository = Provider.of<AuthRepository>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Criar Comunidade'),
@@ -74,16 +79,16 @@ class _CriarChatPageState extends State<CriarChatPage> {
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    String? adminEmail = _authService.getCurrentUserEmail();
+                    String? adminEmail = authRepository.getCurrentUserEmail();
                     if (adminEmail != null && _image != null) {
                       String remotePath =
                           'chats/${_chatNomeController.text}.jpg';
-                      await _storageService.uploadFile(_image!, remotePath);
+                      await storageRepository.uploadFile(_image!, remotePath);
                       String? imageUrl =
-                          await _storageService.downloadFile(remotePath);
+                          await storageRepository.downloadFile(remotePath);
 
                       if (imageUrl != null) {
-                        await _chatService.criarComunidade(
+                        await chatsPublicosRepository.criarComunidade(
                           _chatNomeController.text,
                           _descricaoController.text,
                           adminEmail,

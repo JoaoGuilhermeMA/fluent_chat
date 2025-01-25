@@ -76,4 +76,27 @@ class ChatPublicoService {
       print('Erro ao adicionar mensagem: $e');
     }
   }
+
+  Stream<QuerySnapshot> buscarMensagens(String chatNome) {
+    print('Buscando mensagens de $chatNome: ');
+
+    // Obtém o stream de mensagens
+    final stream = chatPublicoCollection
+        .doc(chatNome)
+        .collection('mensagens')
+        .orderBy('timestamp', descending: false)
+        .snapshots();
+
+    // Adiciona um listener para depuração
+    stream.listen((QuerySnapshot snapshot) {
+      print('Nova atualização no stream: ${snapshot.docs.length} mensagens');
+      for (var doc in snapshot.docs) {
+        print('Mensagem: ${doc.data()}');
+      }
+    }, onError: (error) {
+      print('Erro no stream: $error');
+    });
+
+    return stream;
+  }
 }

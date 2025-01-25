@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:fluent_chat/data/service/auth_service.dart';
-import 'package:fluent_chat/data/service/usuario_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluent_chat/domain/repositories/auth_repository.dart';
+import 'package:fluent_chat/domain/repositories/usuario_repository.dart';
 
 class CadastrarPerfil extends StatefulWidget {
   final String userId; // Recebe o ID do usuário
@@ -39,14 +38,14 @@ class _CadastrarPerfilState extends State<CadastrarPerfil> {
       return;
     }
 
-    // Recuperar a instância de AuthService do Provider
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final usuarioService = UsuarioService();
+    final authRepository = Provider.of<AuthRepository>(context, listen: false);
+    final usuarioRepository =
+        Provider.of<UsuarioRepository>(context, listen: false);
 
     try {
       // Obter o userId
       final userId =
-          authService.getCurrentUserEmail(); // Método retorna o userId
+          authRepository.getCurrentUserEmail(); // Método retorna o userId
       if (userId == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Erro: Usuário não autenticado!')),
@@ -55,12 +54,12 @@ class _CadastrarPerfilState extends State<CadastrarPerfil> {
       }
 
       // Criar o perfil no Firestore
-      await usuarioService.criarUsuario(
+      await usuarioRepository.criarUsuario(
         userId: userId,
         name: nameController.text,
         email: widget.email,
         profilePicture: selectedImage!,
-        rank: "ferro",
+        rank: "bronze",
       );
 
       // Exibir mensagem de sucesso

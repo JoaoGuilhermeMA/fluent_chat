@@ -1,7 +1,9 @@
-import 'package:fluent_chat/data/service/auth_service.dart';
-import 'package:fluent_chat/data/service/usuario_service.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:fluent_chat/domain/repositories/auth_repository.dart';
+import 'package:fluent_chat/domain/repositories/chats_publicos_repository.dart';
+import 'package:fluent_chat/domain/repositories/usuario_repository.dart';
 
 class ChatScreen extends StatefulWidget {
   final String chatNome;
@@ -14,33 +16,35 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final UsuarioService _usuarioService = UsuarioService();
 
   // Função para enviar mensagem
   void _sendMessage(String senderId, String text) async {
-    if (text.trim().isNotEmpty) {
-      await _firestore
-          .collection('chatPublico')
-          .doc(widget.chatNome)
-          .collection('mensagens')
-          .add({
-        'senderId': senderId,
-        'text': text,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+    if (senderId.isNotEmpty && text.trim().isNotEmpty) {
+      final chatsPublicosRepository =
+          Provider.of<ChatsPublicosRepository>(context, listen: false);
+      await chatsPublicosRepository.adicionarMensagem(
+        widget.chatNome,
+        senderId,
+        text,
+      );
       _messageController.clear();
     }
   }
 
   // Função para buscar o nome do usuário pelo ID
   Future<String> _getUserName(String senderId) async {
-    var user = await _usuarioService.buscarUsuario(senderId);
+    final usuarioRepository =
+        Provider.of<UsuarioRepository>(context, listen: false);
+    var user = await usuarioRepository.buscarUsuario(senderId);
     return user?.name ?? 'Usuário Desconhecido';
   }
 
   @override
   Widget build(BuildContext context) {
+    final authRepository = Provider.of<AuthRepository>(context, listen: false);
+    final chatsPublicosRepository =
+        Provider.of<ChatsPublicosRepository>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.chatNome),
@@ -50,15 +54,18 @@ class _ChatScreenState extends State<ChatScreen> {
           // Lista de mensagens
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _firestore
-                  .collection('chatPublico')
-                  .doc(widget.chatNome)
-                  .collection('mensagens')
-                  .orderBy('timestamp', descending: false)
-                  .snapshots(),
+              stream: chatsPublicosRepository.buscarMensagens(widget.chatNome),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Center(child: Text('Erro ao carregar mensagens'));
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('Nenhuma mensagem encontrada'));
                 }
 
                 var messages = snapshot.data!.docs;
@@ -68,14 +75,15 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemBuilder: (context, index) {
                     var message =
                         messages[index].data() as Map<String, dynamic>;
-                    var senderId = message['senderId'];
-                    var text = message['text'];
+                    var senderId = message['enviadoPor'] ?? 'Desconhecido';
+                    var text = message['texto'] ?? '';
                     var timestamp = message['timestamp']?.toDate();
 
                     return FutureBuilder<String>(
                       future: _getUserName(senderId),
                       builder: (context, nameSnapshot) {
-                        if (!nameSnapshot.hasData) {
+                        if (nameSnapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return ListTile(
                             title: Text('Carregando...'),
                             subtitle: Text(text),
@@ -87,8 +95,21 @@ class _ChatScreenState extends State<ChatScreen> {
                           );
                         }
 
+                        if (nameSnapshot.hasError) {
+                          return ListTile(
+                            title: Text('Erro ao carregar nome do usuário'),
+                            subtitle: Text(text),
+                            trailing: Text(
+                              timestamp != null
+                                  ? '${timestamp.hour}:${timestamp.minute}'
+                                  : '',
+                            ),
+                          );
+                        }
+
                         return ListTile(
-                          title: Text(nameSnapshot.data!),
+                          title:
+                              Text(nameSnapshot.data ?? 'Usuário Desconhecido'),
                           subtitle: Text(text),
                           trailing: Text(
                             timestamp != null
@@ -124,9 +145,18 @@ class _ChatScreenState extends State<ChatScreen> {
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () {
-                    // Aqui você pode passar o ID do usuário logado
-                    String senderId = AuthService().getCurrentUserEmail()!;
-                    _sendMessage(senderId, _messageController.text);
+                    // Obtém o ID do usuário logado
+                    String? senderId = authRepository.getCurrentUserEmail();
+
+                    if (senderId != null) {
+                      _sendMessage(senderId, _messageController.text);
+                    } else {
+                      // Exibe uma mensagem de erro se o usuário não estiver autenticado
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text('Erro: Usuário não autenticado!')),
+                      );
+                    }
                   },
                 ),
               ],

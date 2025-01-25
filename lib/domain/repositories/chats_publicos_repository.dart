@@ -9,4 +9,10 @@ abstract class ChatsPublicosRepository {
   Future<DocumentSnapshot?> buscarComunidade(String chatNome);
   Future<void> excluirComunidade(String chatNome);
   Future<void> adicionarMensagem(String chatNome, String email, String texto);
+  // Novo método para buscar comunidades paginadas
+  Future<List<Map<String, dynamic>>> buscarComunidadesPaginadas({
+    required int pageSize,
+    DocumentSnapshot? lastDocument,
+  });
+  Stream<QuerySnapshot> buscarMensagens(String chatNome);
 }

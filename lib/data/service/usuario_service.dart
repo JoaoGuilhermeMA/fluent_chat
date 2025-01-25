@@ -48,6 +48,7 @@ class UsuarioService {
 
   // Método para buscar um usuário no Firestore pelo userId
   Future<Perfil?> buscarUsuario(String userId) async {
+    print("userId: " + userId);
     try {
       // Obtém o documento do usuário no Firestore
       DocumentSnapshot doc =
@@ -58,6 +59,7 @@ class UsuarioService {
         return Perfil.fromMap(doc.data() as Map<String, dynamic>);
       } else {
         print('Usuário não encontrado');
+        print("estou aqui");
         return null;
       }
     } catch (e) {

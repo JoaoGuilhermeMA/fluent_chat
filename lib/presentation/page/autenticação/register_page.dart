@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_chat/data/service/auth_service.dart';
+import 'package:fluent_chat/domain/repositories/auth_repository.dart';
 import 'package:fluent_chat/presentation/page/autentica%C3%A7%C3%A3o/cadastrar_perfil.dart';
 import 'package:fluent_chat/presentation/widgets/custom_button.dart';
 import 'package:fluent_chat/presentation/widgets/custom_password_form_field.dart';
@@ -32,10 +33,10 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    final AuthService authService =
-        Provider.of<AuthService>(context, listen: false);
+    final authRepository = Provider.of<AuthRepository>(context, listen: false);
     try {
-      UserCredential credential = await authService.signUpWithEmailAndPassword(
+      UserCredential credential =
+          await authRepository.signUpWithEmailAndPassword(
         emailController.value.text,
         passwordController.value.text,
       );
