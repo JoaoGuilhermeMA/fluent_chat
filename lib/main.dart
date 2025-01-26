@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fluent_chat/data/service/tts_service.dart';
 import 'package:fluent_chat/presentation/widgets/auth_checker.dart';
 import 'package:fluent_chat/core/di/configure_providers.dart';
 import 'package:fluent_chat/firebase_options.dart';
@@ -18,6 +19,9 @@ Future<void> main() async {
 
   // Configura os providers
   final providers = await ConfigureProviders.createDependencyTree();
+
+  final ttsService = TtsService();
+  await ttsService.initialize();
 
   runApp(MyApp(providers: providers.providers));
 }

@@ -98,10 +98,7 @@ class CursosPage extends StatelessWidget {
 class VocabularioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ExercisePage(
-      "oi",
-      userId: 'joomoreira36@gmail.com',
-    );
+    return ExercisePage(phrase: "Hello world");
   }
 }
 

@@ -1,31 +1,32 @@
-// Exemplo de uso em um widget
-import 'package:fluent_chat/domain/repositories/usuario_repository.dart';
+// lib/presentation/pages/exercise_page.dart
+import 'package:fluent_chat/data/service/tts_service.dart';
+import 'package:fluent_chat/domain/repositories/tts_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ExercisePage extends StatelessWidget {
-  final String userId;
+  final String phrase;
 
-  ExercisePage(String s, {required this.userId});
+  ExercisePage({required this.phrase});
 
   @override
   Widget build(BuildContext context) {
-    final usuarioRepository = context.read<UsuarioRepository>();
+    final ttsRepository = context.read<TtsRepository>();
 
     return Scaffold(
       appBar: AppBar(title: Text('Exercício')),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            // Simula um exercício concluído
-            await usuarioRepository.atualizarProgresso(
-              userId: userId,
-              livesUsed: 2,
-              correctAnswers: 8,
-            );
-            print('Progresso atualizado!');
-          },
-          child: Text('Completar Exercício'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(phrase),
+            ElevatedButton(
+              onPressed: () async {
+                await ttsRepository.speak(phrase); // Reproduz a frase
+              },
+              child: Text('Ouvir Frase'),
+            ),
+          ],
         ),
       ),
     );
