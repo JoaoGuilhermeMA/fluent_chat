@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluent_chat/domain/entities/perfil.dart';
 import 'dart:io';
-import 'firebase_storage_service.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluent_chat/data/service/firebase_storage_service.dart';
+import 'package:fluent_chat/domain/entities/perfil.dart';
 
 class UsuarioService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -30,7 +30,7 @@ class UsuarioService {
         throw Exception('Erro ao obter URL da foto do perfil');
       }
 
-      // Cria uma instância de User
+      // Cria uma instância de Perfil
       Perfil perfil = Perfil(
         name: name,
         email: email,
@@ -55,7 +55,7 @@ class UsuarioService {
           await _firestore.collection('users').doc(userId).get();
 
       if (doc.exists) {
-        // Converte o documento para um objeto User usando o fromMap
+        // Converte o documento para um objeto Perfil usando o fromMap
         return Perfil.fromMap(doc.data() as Map<String, dynamic>);
       } else {
         print('Usuário não encontrado');
@@ -66,5 +66,64 @@ class UsuarioService {
       print('Erro ao buscar usuário: $e');
       return null;
     }
+  }
+
+  // Método para atualizar o progresso do usuário
+  Future<void> atualizarProgresso({
+    required String userId,
+    required int livesUsed,
+    required int correctAnswers,
+  }) async {
+    try {
+      // Busca o perfil do usuário
+      Perfil? perfil = await buscarUsuario(userId);
+      if (perfil == null) {
+        throw Exception('Usuário não encontrado');
+      }
+
+      // Calcula os novos pontos e rank
+      const int basePoints = 15;
+      const int pointsPerLife = 3;
+      const int penaltyPerError = 3;
+      print("Estou aqui");
+      int pointsEarned =
+          basePoints + (livesUsed * pointsPerLife); // 15 + 2*3 = 21
+      print(pointsEarned);
+      int pointsLost =
+          basePoints - (correctAnswers * penaltyPerError); // 15 - 8*5 = -25
+      print(pointsLost);
+
+      int newPoints = perfil.points + pointsEarned - pointsLost;
+      print(newPoints);
+      int newLives = perfil.lives - livesUsed;
+
+      // Atualiza o rank com base nos pontos
+      String newRank = _calculateRank(newPoints);
+
+      // Atualiza o perfil do usuário
+      Perfil updatedPerfil = perfil.copyWith(
+        points: newPoints,
+        lives: newLives,
+        rank: newRank,
+      );
+
+      // Salva o perfil atualizado no Firestore
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .set(updatedPerfil.toMap());
+      print('Progresso do usuário atualizado com sucesso.');
+    } catch (e) {
+      print('Erro ao atualizar progresso do usuário: $e');
+    }
+  }
+
+  // Método para calcular o rank com base nos pontos
+  String _calculateRank(int points) {
+    if (points >= 800) return 'Radiante';
+    if (points >= 600) return 'Diamante';
+    if (points >= 400) return 'Ouro';
+    if (points >= 200) return 'Prata';
+    return 'Bronze';
   }
 }

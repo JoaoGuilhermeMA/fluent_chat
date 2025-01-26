@@ -9,22 +9,38 @@ class UsuarioRepositoryImpl extends UsuarioRepository {
 
   UsuarioRepositoryImpl(this._usuarioService);
 
+  @override
   Future<Perfil?> buscarUsuario(String userId) {
     return _usuarioService.buscarUsuario(userId);
   }
 
   @override
-  Future<void> criarUsuario(
-      {required String userId,
-      required String name,
-      required String email,
-      required File profilePicture,
-      required String rank}) async {
-    _usuarioService.criarUsuario(
-        userId: userId,
-        name: name,
-        email: email,
-        profilePicture: profilePicture,
-        rank: rank);
+  Future<void> criarUsuario({
+    required String userId,
+    required String name,
+    required String email,
+    required File profilePicture,
+    required String rank,
+  }) async {
+    await _usuarioService.criarUsuario(
+      userId: userId,
+      name: name,
+      email: email,
+      profilePicture: profilePicture,
+      rank: rank,
+    );
+  }
+
+  @override
+  Future<void> atualizarProgresso({
+    required String userId,
+    required int livesUsed,
+    required int correctAnswers,
+  }) async {
+    await _usuarioService.atualizarProgresso(
+      userId: userId,
+      livesUsed: livesUsed,
+      correctAnswers: correctAnswers,
+    );
   }
 }

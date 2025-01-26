@@ -12,4 +12,10 @@ abstract class UsuarioRepository {
   });
   // Método para buscar um usuário no Firestore pelo userId
   Future<Perfil?> buscarUsuario(String userId);
+
+  Future<void> atualizarProgresso({
+    required String userId,
+    required int livesUsed,
+    required int correctAnswers,
+  });
 }

@@ -1,3 +1,5 @@
+import 'package:fluent_chat/data/repositories/auth_repository_impl.dart';
+import 'package:fluent_chat/presentation/page/cursos/vocabulario_screen.dart';
 import 'package:flutter/material.dart';
 
 class CursosPage extends StatelessWidget {
@@ -96,13 +98,9 @@ class CursosPage extends StatelessWidget {
 class VocabularioPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Vocabulário"),
-      ),
-      body: Center(
-        child: Text("Conteúdo de Vocabulário"),
-      ),
+    return ExercisePage(
+      "oi",
+      userId: 'joomoreira36@gmail.com',
     );
   }
 }
