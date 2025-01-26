@@ -5,6 +5,7 @@ import 'package:fluent_chat/domain/repositories/texto_repository.dart';
 import 'package:fluent_chat/domain/repositories/usuario_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'escuta_page.dart'; // Importe a página de escuta
 
 class VocabularioPage extends StatefulWidget {
   @override
@@ -45,17 +46,19 @@ class _VocabularioPageState extends State<VocabularioPage> {
           _rankUser = perfil.rank;
         });
 
+        // Busca uma frase aleatória com base no rank do usuário
         final textoRepository =
             Provider.of<TextoRepository>(context, listen: false);
         final frase =
             await textoRepository.buscarFraseAleatoria(_rankUser.toLowerCase());
 
+        // Traduz a frase
         final traducao = await TranslationHelper.translateText(frase);
 
         setState(() {
           _fraseAtual = frase;
           _traducaoCorreta = traducao;
-          _respostaCorreta = false;
+          _respostaCorreta = false; // Reseta o estado da resposta
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -82,6 +85,14 @@ class _VocabularioPageState extends State<VocabularioPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta correta!')),
       );
+
+      // Navega para a página de escuta após 1 segundo
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EscutaPage()),
+        );
+      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta incorreta! Tente novamente.')),
@@ -125,11 +136,6 @@ class _VocabularioPageState extends State<VocabularioPage> {
                 onPressed: _verificarResposta,
                 child: Text('Verificar Resposta'),
               ),
-              if (_respostaCorreta)
-                ElevatedButton(
-                  onPressed: _carregarDadosDoUsuarioEFrase,
-                  child: Text('Próxima Frase'),
-                ),
             ],
           ],
         ),
