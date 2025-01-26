@@ -1,5 +1,5 @@
 import 'package:fluent_chat/presentation/page/comunidade_page.dart';
-import 'package:fluent_chat/presentation/page/cursos/cursos_page.dart';
+import 'package:fluent_chat/presentation/page/home_screen.dart';
 import 'package:fluent_chat/presentation/page/perfil_page.dart';
 import 'package:fluent_chat/presentation/page/reconhecer_fala.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class _MyHomePageState extends State<TelaInicial> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    CursosPage(),
+    HomePage(),
     SpeechToTextExample(),
     ComunidadePage(),
     PerfilPage(),
