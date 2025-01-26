@@ -6,13 +6,15 @@ import 'package:provider/provider.dart';
 import '../../domain/repositories/usuario_repository.dart';
 
 class RankingCard extends StatefulWidget {
+  const RankingCard({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _RankingCardState createState() => _RankingCardState();
 }
 
 class _RankingCardState extends State<RankingCard> {
   late String userId;
-  late Future<Map<String, dynamic>?> _userData;
 
   @override
   Widget build(BuildContext context) {

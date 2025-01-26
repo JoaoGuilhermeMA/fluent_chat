@@ -1,4 +1,3 @@
-import 'package:fluent_chat/data/repositories/auth_repository_impl.dart';
 import 'package:fluent_chat/presentation/page/cursos/vocabulario_screen.dart';
 import 'package:flutter/material.dart';
 

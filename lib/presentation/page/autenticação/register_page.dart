@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluent_chat/data/service/auth_service.dart';
 import 'package:fluent_chat/domain/repositories/auth_repository.dart';
 import 'package:fluent_chat/presentation/page/autentica%C3%A7%C3%A3o/cadastrar_perfil.dart';
 import 'package:fluent_chat/presentation/widgets/custom_button.dart';
