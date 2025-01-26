@@ -1,4 +1,5 @@
 // lib/presentation/pages/home_page.dart
+import 'package:fluent_chat/presentation/page/cursos/exercicio_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/ranking_card.dart';
@@ -21,7 +22,10 @@ class HomePage extends StatelessWidget {
               title: 'Praticar',
               description: 'Pratique gramática, vocabulário e escuta.',
               onTap: () {
-                // Navegar para a página de exercícios
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PraticarPage()),
+                );
               },
             ),
             SizedBox(height: 20.0),
