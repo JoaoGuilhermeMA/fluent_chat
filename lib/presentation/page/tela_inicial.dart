@@ -19,7 +19,6 @@ class _MyHomePageState extends State<TelaInicial> {
 
   static List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    SpeechToTextExample(),
     ComunidadePage(),
     PerfilPage(),
   ];
@@ -58,7 +57,6 @@ class _MyHomePageState extends State<TelaInicial> {
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: "Cursos"),
-          NavigationDestination(icon: Icon(Icons.speaker), label: 'Fala'),
           NavigationDestination(icon: Icon(Icons.people), label: 'Comunidade'),
           NavigationDestination(icon: Icon(Icons.person), label: 'Perfil'),
         ],
