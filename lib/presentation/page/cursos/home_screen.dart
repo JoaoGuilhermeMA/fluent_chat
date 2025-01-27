@@ -1,10 +1,11 @@
 // lib/presentation/pages/home_page.dart
 import 'package:fluent_chat/presentation/page/cursos/exercicio_page.dart';
-import 'package:fluent_chat/presentation/page/palavra_cruzada_tela.dart';
+import 'package:fluent_chat/presentation/page/cursos/gramatica_screen.dart';
+import 'package:fluent_chat/presentation/page/cursos/palavra_cruzada_tela.dart';
 import 'package:flutter/material.dart';
-import '../widgets/home_app_bar.dart';
-import '../widgets/ranking_card.dart';
-import '../widgets/section_card.dart';
+import '../../widgets/home_app_bar.dart';
+import '../../widgets/ranking_card.dart';
+import '../../widgets/section_card.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -32,12 +33,12 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 20.0),
             SectionCard(
               icon: Icons.book,
-              title: 'Vocabulário',
-              description: 'Aprenda novas palavras diariamente.',
+              title: 'Gramática',
+              description: 'Aprenda conceitos da gramática da lingua inglesa.',
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PalavraCruzadaTela()),
+                  MaterialPageRoute(builder: (context) => GrammarScreen()),
                 );
               },
             ),

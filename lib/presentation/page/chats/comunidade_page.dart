@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:fluent_chat/domain/repositories/chats_publicos_repository.dart';
-import 'chats/criar_chat.dart';
-import 'chats/tela_chat.dart';
+import 'criar_chat.dart';
+import 'tela_chat.dart';
 
 class ComunidadePage extends StatefulWidget {
   @override

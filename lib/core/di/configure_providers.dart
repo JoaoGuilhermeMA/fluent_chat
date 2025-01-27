@@ -1,6 +1,7 @@
 import 'package:fluent_chat/data/repositories/auth_repository_impl.dart';
 import 'package:fluent_chat/data/repositories/chats_publicos_impl.dart';
 import 'package:fluent_chat/data/repositories/firebase_storage_repository_impl.dart';
+import 'package:fluent_chat/data/repositories/gramatica_repository_impl.dart';
 import 'package:fluent_chat/data/repositories/palavra_cruzada_repository_impl.dart';
 import 'package:fluent_chat/data/repositories/speech_repository_impl.dart';
 import 'package:fluent_chat/data/repositories/texto_repository_impl.dart';
@@ -9,6 +10,7 @@ import 'package:fluent_chat/data/repositories/usuario_repository_impl.dart';
 import 'package:fluent_chat/data/service/auth_service.dart';
 import 'package:fluent_chat/data/service/chats_publicos_services.dart';
 import 'package:fluent_chat/data/service/firebase_storage_service.dart';
+import 'package:fluent_chat/data/service/gramatica_service.dart';
 import 'package:fluent_chat/data/service/palavra_cruzada_service.dart';
 import 'package:fluent_chat/data/service/speech_service.dart';
 import 'package:fluent_chat/data/service/texto_service.dart';
@@ -17,6 +19,7 @@ import 'package:fluent_chat/data/service/usuario_service.dart';
 import 'package:fluent_chat/domain/repositories/auth_repository.dart';
 import 'package:fluent_chat/domain/repositories/chats_publicos_repository.dart';
 import 'package:fluent_chat/domain/repositories/firebase_storage_repository.dart';
+import 'package:fluent_chat/domain/repositories/gramatica_repository.dart';
 import 'package:fluent_chat/domain/repositories/palavra_cruzada_repository.dart';
 import 'package:fluent_chat/domain/repositories/speech_repository.dart';
 import 'package:fluent_chat/domain/repositories/texto_repository.dart';
@@ -40,6 +43,7 @@ class ConfigureProviders {
     final ttsService = TtsService();
     final speechService = SpeechService();
     final palavraCruzadaService = PalavraCruzadaService();
+    final gramaticaService = GramaticaService();
 
     // Inicialize os repositórios com os serviços
     final authRepository = AuthRepositoryImpl(authService);
@@ -52,6 +56,7 @@ class ConfigureProviders {
     final speechRepository = SpeechRepositoryImpl(speechService);
     final palavraCruzadaRepository =
         PalavraCruzadaRepositoryImpl(palavraCruzadaService);
+    final gramaticaRepository = GramaticaRepositoryImpl(gramaticaService);
 
     // Crie a lista de providers
     final providers = [
@@ -63,6 +68,7 @@ class ConfigureProviders {
       Provider<TtsService>.value(value: ttsService),
       Provider<SpeechService>.value(value: speechService),
       Provider<PalavraCruzadaService>.value(value: palavraCruzadaService),
+      Provider<GramaticaService>.value(value: gramaticaService),
 
       // Registre os repositórios (usando as interfaces, não as implementações)
       Provider<AuthRepository>.value(value: authRepository),
@@ -74,6 +80,7 @@ class ConfigureProviders {
       Provider<TtsRepository>.value(value: ttsRepository),
       Provider<SpeechRepository>.value(value: speechRepository),
       Provider<PalavraCruzadaRepository>.value(value: palavraCruzadaRepository),
+      Provider<GramaticaRepository>.value(value: gramaticaRepository),
     ];
 
     // Retorne o objeto ConfigureProviders com a lista de providers

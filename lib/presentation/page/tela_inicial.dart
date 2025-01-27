@@ -1,7 +1,6 @@
-import 'package:fluent_chat/presentation/page/comunidade_page.dart';
-import 'package:fluent_chat/presentation/page/home_screen.dart';
+import 'package:fluent_chat/presentation/page/chats/comunidade_page.dart';
+import 'package:fluent_chat/presentation/page/cursos/home_screen.dart';
 import 'package:fluent_chat/presentation/page/perfil_page.dart';
-import 'package:fluent_chat/presentation/page/reconhecer_fala.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
