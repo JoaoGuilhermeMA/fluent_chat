@@ -8,10 +8,19 @@ class TopicoDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(topico.title),
-        backgroundColor: Colors.blueAccent,
+        title: Text(
+          topico.title,
+          style: textTheme.headlineSmall?.copyWith(
+            color: colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: colorScheme.primary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -21,57 +30,76 @@ class TopicoDetailScreen extends StatelessWidget {
             children: [
               Text(
                 topico.title,
-                style: const TextStyle(
-                  fontSize: 24,
+                style: textTheme.headlineMedium?.copyWith(
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 16),
               Text(
                 topico.description,
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey,
+                style: textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'Explicação:',
-                style: TextStyle(
-                  fontSize: 20,
+                style: textTheme.titleLarge?.copyWith(
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 topico.texto,
-                style: const TextStyle(fontSize: 16),
+                style: textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurface,
+                ),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'Exemplo:',
-                style: TextStyle(
-                  fontSize: 20,
+                style: textTheme.titleLarge?.copyWith(
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                topico.exemplo,
-                style: const TextStyle(fontSize: 16),
+              Card(
+                elevation: 4.0,
+                color: colorScheme.surfaceVariant,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    topico.exemplo,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'Dica:',
-                style: TextStyle(
-                  fontSize: 20,
+                style: textTheme.titleLarge?.copyWith(
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                topico.dica,
-                style: const TextStyle(fontSize: 16),
+              Card(
+                elevation: 4.0,
+                color: colorScheme.surfaceVariant,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    topico.dica,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

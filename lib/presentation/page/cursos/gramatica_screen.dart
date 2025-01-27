@@ -23,22 +23,33 @@ class _GrammarScreenState extends State<GrammarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     final gramaticaRepository = Provider.of<GramaticaRepository>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Aprenda Gramática'),
+        title: Text(
+          'Aprenda Gramática',
+          style: textTheme.headlineSmall?.copyWith(
+            color: colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: colorScheme.primary,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
               'Escolha um nível:',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: textTheme.titleLarge?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           // Horizontal rank selector
@@ -65,11 +76,11 @@ class _GrammarScreenState extends State<GrammarScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     padding: const EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
-                      color: rankColors[rank] ?? Colors.blue,
+                      color: rankColors[rank] ?? colorScheme.primary,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: selectedRank == rank
-                            ? Colors.black
+                            ? colorScheme.onPrimary
                             : Colors.transparent,
                         width: 2,
                       ),
@@ -78,8 +89,8 @@ class _GrammarScreenState extends State<GrammarScreen> {
                     child: Center(
                       child: Text(
                         rank,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: colorScheme.onPrimary,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
@@ -96,15 +107,18 @@ class _GrammarScreenState extends State<GrammarScreen> {
                 ? Center(
                     child: Text(
                       'Selecione um nível acima para ver os tópicos!',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[700],
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   )
                 : topicos == null
-                    ? const Center(child: CircularProgressIndicator())
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: colorScheme.primary,
+                        ),
+                      )
                     : Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
@@ -112,8 +126,8 @@ class _GrammarScreenState extends State<GrammarScreen> {
                           children: [
                             Text(
                               'Tópicos de ${selectedRank!}:',
-                              style: const TextStyle(
-                                fontSize: 20,
+                              style: textTheme.titleLarge?.copyWith(
+                                color: colorScheme.onSurface,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -124,10 +138,26 @@ class _GrammarScreenState extends State<GrammarScreen> {
                                 itemBuilder: (context, index) {
                                   final topico = topicos![index];
                                   return Card(
+                                    elevation: 4.0,
+                                    color: colorScheme.surfaceVariant,
                                     child: ListTile(
-                                      title: Text(topico.title),
-                                      subtitle: Text(topico.description),
-                                      trailing: const Icon(Icons.arrow_forward),
+                                      title: Text(
+                                        topico.title,
+                                        style: textTheme.titleMedium?.copyWith(
+                                          color: colorScheme.onSurfaceVariant,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        topico.description,
+                                        style: textTheme.bodyMedium?.copyWith(
+                                          color: colorScheme.onSurfaceVariant
+                                              .withOpacity(0.8),
+                                        ),
+                                      ),
+                                      trailing: Icon(
+                                        Icons.arrow_forward,
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
                                       onTap: () {
                                         // Navega para a tela de detalhes do tópico
                                         Navigator.push(

@@ -82,24 +82,56 @@ class _PalavraCruzadaTela extends State<PalavraCruzadaTela> {
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
-  // Função para adicionar 100 pontos ao usuário
+  String _calculateRank(int points) {
+    if (points >= 800) return 'Radiante';
+    if (points >= 600) return 'Diamante';
+    if (points >= 400) return 'Ouro';
+    if (points >= 200) return 'Prata';
+    return 'Bronze';
+  }
+
+  // Função para adicionar 100 pontos e atualizar o rank do usuário
   Future<void> ganhouDesafio() async {
     try {
       final authRepository =
           Provider.of<AuthRepository>(context, listen: false);
       String? userId = authRepository.getCurrentUserEmail();
 
+      if (userId == null) {
+        throw Exception("Usuário não autenticado.");
+      }
+
       // Referência ao documento do usuário
       DocumentReference userRef = _firestore.collection('users').doc(userId);
 
-      // Atualiza o campo 'points' incrementando 100 pontos
-      await userRef.update({
-        'points': FieldValue.increment(100),
-      });
+      // Transação para garantir que as atualizações sejam consistentes
+      await _firestore.runTransaction((transaction) async {
+        // Obtém o documento atual do usuário
+        DocumentSnapshot userDoc = await transaction.get(userRef);
 
-      print("100 pontos adicionados com sucesso!");
+        if (!userDoc.exists) {
+          throw Exception("Usuário não encontrado no Firestore.");
+        }
+
+        // Obtém os pontos atuais
+        int currentPoints = userDoc['points'] ?? 0;
+
+        // Incrementa 100 pontos
+        int updatedPoints = currentPoints + 100;
+
+        // Recalcula o rank com base nos pontos atualizados
+        String updatedRank = _calculateRank(updatedPoints);
+
+        // Atualiza os campos no Firestore
+        transaction.update(userRef, {
+          'points': updatedPoints,
+          'rank': updatedRank,
+        });
+
+        print("100 pontos adicionados e rank atualizado para $updatedRank.");
+      });
     } catch (e) {
-      print("Erro ao adicionar pontos: $e");
+      print("Erro ao atualizar pontos e rank: $e");
     }
   }
 
