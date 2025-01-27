@@ -49,6 +49,7 @@ dependencies:
   translator: ^1.0.3+1
   flutter_tts: ^4.2.1
   crossword_generator: ^1.2.0
+  fl_chart: ^0.70.2
 
 dev_dependencies:
   flutter_test:

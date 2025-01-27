@@ -9,9 +9,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: Icon(Icons.leaderboard),
-          onPressed: () {
-            // Navegar para a página de ranking
-          },
+          onPressed: () {},
         ),
       ],
     );

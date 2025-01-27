@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_chat/domain/repositories/auth_repository.dart';
+import 'package:fluent_chat/presentation/page/relatorio_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,14 +19,13 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   void initState() {
     super.initState();
-    // Obtendo o uid do usuário logado, que é único no Firebase Auth
+    // Obtendo o email do usuário logado
     userId = Provider.of<AuthRepository>(context, listen: false)
-        .getCurrentUserEmail()!; // A linha para pegar o email do usuário logado
-    _userData =
-        _getUserData(userId); // Buscando os dados do usuário usando o uid
+        .getCurrentUserEmail()!;
+    _userData = _getUserData(userId); // Buscando os dados do usuário
   }
 
-  // Método para buscar os dados do usuário no Firestore usando o uid
+  // Método para buscar os dados do usuário no Firestore usando o email
   Future<Map<String, dynamic>?> _getUserData(String userId) async {
     DocumentSnapshot userDoc =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
@@ -36,11 +36,25 @@ class _PerfilPageState extends State<PerfilPage> {
     }
   }
 
+  // Método para fazer logout
+  void _logout() async {
+    final authRepository = Provider.of<AuthRepository>(context, listen: false);
+    await authRepository.signOut();
+    Navigator.of(context)
+        .pushReplacementNamed('/login'); // Redireciona para a tela de login
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Perfil'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _logout, // Botão de logout
+          ),
+        ],
       ),
       body: FutureBuilder<Map<String, dynamic>?>(
         future: _userData,
@@ -89,62 +103,28 @@ class _PerfilPageState extends State<PerfilPage> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  'Contatos',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                // Botão para acessar o relatório
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RelatorioScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text('Ver Relatório'),
+                  ),
                 ),
-                const SizedBox(height: 8),
-                user['contacts'] == null || (user['contacts'] as List).isEmpty
-                    ? const Text('Nenhum contato encontrado.')
-                    : Column(
-                        children:
-                            (user['contacts'] as List).map<Widget>((contactId) {
-                          return FutureBuilder<DocumentSnapshot>(
-                            future: FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(contactId)
-                                .get(),
-                            builder: (context, contactSnapshot) {
-                              if (contactSnapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              }
-                              if (contactSnapshot.hasError) {
-                                return Text('Erro: ${contactSnapshot.error}');
-                              }
-
-                              var contactData = contactSnapshot.data?.data()
-                                  as Map<String, dynamic>?;
-
-                              if (contactData == null) return const SizedBox();
-
-                              return ListTile(
-                                title: Text(contactData['name']),
-                                subtitle: Text(contactData['email']),
-                              );
-                            },
-                          );
-                        }).toList(),
-                      ),
-                const SizedBox(height: 24),
-                const Text(
-                  'Conquistas',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                const SizedBox(height: 16),
+                // Botão de logout no corpo da página (opcional)
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _logout,
+                    child: const Text('Sair'),
+                  ),
                 ),
-                const SizedBox(height: 8),
-                user['achievements'] == null ||
-                        (user['achievements'] as List).isEmpty
-                    ? const Text('Nenhuma conquista registrada.')
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: (user['achievements'] as List)
-                            .map<Widget>((achievement) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text('• $achievement'),
-                          );
-                        }).toList(),
-                      ),
               ],
             ),
           );
