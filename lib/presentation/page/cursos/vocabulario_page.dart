@@ -17,8 +17,6 @@ class VocabularioPage extends StatefulWidget {
 class _VocabularioPageState extends State<VocabularioPage> {
   final TextEditingController _respostaController = TextEditingController();
   String? _fraseAtual;
-  String? _traducaoCorreta;
-  bool _respostaCorreta = false;
   String _rankUser = "bronze";
   bool _carregando = false;
   late String idUser;
@@ -50,12 +48,9 @@ class _VocabularioPageState extends State<VocabularioPage> {
             Provider.of<TextoRepository>(context, listen: false);
         final frase =
             await textoRepository.buscarFraseAleatoria(_rankUser.toLowerCase());
-        final traducao = await TranslationHelper.translateText(frase);
 
         setState(() {
           _fraseAtual = frase;
-          _traducaoCorreta = traducao;
-          _respostaCorreta = false;
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -84,9 +79,7 @@ class _VocabularioPageState extends State<VocabularioPage> {
     print(respostaCorreta);
 
     if (respostaCorreta) {
-      setState(() {
-        _respostaCorreta = true;
-      });
+      setState(() {});
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta correta!')),
       );

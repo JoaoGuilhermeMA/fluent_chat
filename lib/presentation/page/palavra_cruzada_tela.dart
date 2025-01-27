@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PalavraCruzadaTela extends StatefulWidget {
+  const PalavraCruzadaTela({super.key});
+
   @override
   _PalavraCruzadaTela createState() => _PalavraCruzadaTela();
 }
 
 class _PalavraCruzadaTela extends State<PalavraCruzadaTela> {
-  Function? _revealCurrentCellLetter;
   late Future<List<Map<String, dynamic>>> _futurePalavras;
 
   @override
@@ -76,9 +77,7 @@ class _PalavraCruzadaTela extends State<PalavraCruzadaTela> {
                 );
               },
             ),
-            onRevealCurrentCellLetter: (revealCurrentCellLetter) {
-              _revealCurrentCellLetter = revealCurrentCellLetter;
-            },
+            onRevealCurrentCellLetter: (revealCurrentCellLetter) {},
             onCrosswordCompleted: () {
               showDialog(
                 context: context,

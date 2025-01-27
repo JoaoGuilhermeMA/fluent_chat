@@ -16,7 +16,7 @@ class PalavraCruzadaService {
 
       // Converte os documentos em uma lista de mapas no formato desejado
       final todasPalavras = querySnapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         return {
           'answer': data['answer'] as String,
           'description': data['description'] as String,
