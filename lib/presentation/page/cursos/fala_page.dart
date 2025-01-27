@@ -1,4 +1,3 @@
-// lib/presentation/pages/fala_page.dart
 import 'package:fluent_chat/domain/repositories/auth_repository.dart';
 import 'package:fluent_chat/domain/repositories/usuario_repository.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,10 @@ import 'package:fluent_chat/domain/repositories/texto_repository.dart';
 import 'package:fluent_chat/domain/repositories/speech_repository.dart';
 
 class FalaPage extends StatefulWidget {
+  final Function(bool) onRespostaVerificada;
+
+  FalaPage({required this.onRespostaVerificada});
+
   @override
   _FalaPageState createState() => _FalaPageState();
 }
@@ -33,7 +36,6 @@ class _FalaPageState extends State<FalaPage> {
     });
 
     try {
-      // Busca o perfil do usuário
       final usuarioRepository =
           Provider.of<UsuarioRepository>(context, listen: false);
       idUser = Provider.of<AuthRepository>(context, listen: false)
@@ -46,8 +48,7 @@ class _FalaPageState extends State<FalaPage> {
 
       final textoRepository =
           Provider.of<TextoRepository>(context, listen: false);
-      final frase = await textoRepository
-          .buscarFraseAleatoria("bronze"); // Use o rank do usuário
+      final frase = await textoRepository.buscarFraseAleatoria("bronze");
 
       setState(() {
         _fraseAtual = frase;
@@ -82,27 +83,28 @@ class _FalaPageState extends State<FalaPage> {
   }
 
   void _verificarResposta() {
-    if (_textoReconhecido.toLowerCase() == _fraseAtual?.toLowerCase()) {
+    // Remove o ponto final da frase original (se houver)
+    String fraseSemPonto = _fraseAtual?.replaceAll(RegExp(r'\.$'), '') ?? '';
+
+    // Compara o texto reconhecido com a frase sem o ponto final
+    bool respostaCorreta =
+        _textoReconhecido.toLowerCase() == fraseSemPonto.toLowerCase();
+
+    if (respostaCorreta) {
       setState(() {
         _respostaCorreta = true;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta correta!')),
       );
-
-      // Navega para outra tela ou reinicia o exercício após 1 segundo
-      Future.delayed(Duration(seconds: 1), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => FalaPage()), // Reinicia a tela
-        );
-      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta incorreta! Tente novamente.')),
       );
     }
+
+    // Chama a função onRespostaVerificada passando o resultado da resposta
+    widget.onRespostaVerificada(respostaCorreta);
   }
 
   @override
@@ -120,7 +122,6 @@ class _FalaPageState extends State<FalaPage> {
             if (_carregando)
               Center(child: CircularProgressIndicator())
             else if (_fraseAtual != null) ...[
-              // Exibe a frase que o usuário deve falar
               Text(
                 'Fale a frase:',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
@@ -132,7 +133,6 @@ class _FalaPageState extends State<FalaPage> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20.0),
-              // Botão de microfone para iniciar o reconhecimento de fala
               Center(
                 child: IconButton(
                   icon: Icon(
@@ -143,7 +143,6 @@ class _FalaPageState extends State<FalaPage> {
                 ),
               ),
               SizedBox(height: 20.0),
-              // Exibe o texto reconhecido
               Text(
                 'Você disse:',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
@@ -155,7 +154,6 @@ class _FalaPageState extends State<FalaPage> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20.0),
-              // Botão para verificar a resposta
               ElevatedButton(
                 onPressed: _verificarResposta,
                 child: Text('Verificar Resposta'),

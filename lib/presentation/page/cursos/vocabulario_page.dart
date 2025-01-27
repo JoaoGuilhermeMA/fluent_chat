@@ -1,13 +1,15 @@
-// lib/presentation/pages/vocabulario_page.dart
 import 'package:fluent_chat/core/utils/translation_helper.dart';
 import 'package:fluent_chat/domain/repositories/auth_repository.dart';
 import 'package:fluent_chat/domain/repositories/texto_repository.dart';
 import 'package:fluent_chat/domain/repositories/usuario_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'escuta_page.dart'; // Importe a página de escuta
 
 class VocabularioPage extends StatefulWidget {
+  final Function(bool) onRespostaVerificada;
+
+  VocabularioPage({required this.onRespostaVerificada});
+
   @override
   _VocabularioPageState createState() => _VocabularioPageState();
 }
@@ -17,8 +19,7 @@ class _VocabularioPageState extends State<VocabularioPage> {
   String? _fraseAtual;
   String? _traducaoCorreta;
   bool _respostaCorreta = false;
-  String _rankUser =
-      "bronze"; // Rank padrão, caso não seja possível buscar o rank do usuário
+  String _rankUser = "bronze";
   bool _carregando = false;
   late String idUser;
 
@@ -34,7 +35,6 @@ class _VocabularioPageState extends State<VocabularioPage> {
     });
 
     try {
-      // Busca o perfil do usuário
       final usuarioRepository =
           Provider.of<UsuarioRepository>(context, listen: false);
       idUser = Provider.of<AuthRepository>(context, listen: false)
@@ -46,19 +46,16 @@ class _VocabularioPageState extends State<VocabularioPage> {
           _rankUser = perfil.rank;
         });
 
-        // Busca uma frase aleatória com base no rank do usuário
         final textoRepository =
             Provider.of<TextoRepository>(context, listen: false);
         final frase =
             await textoRepository.buscarFraseAleatoria(_rankUser.toLowerCase());
-
-        // Traduz a frase
         final traducao = await TranslationHelper.translateText(frase);
 
         setState(() {
           _fraseAtual = frase;
           _traducaoCorreta = traducao;
-          _respostaCorreta = false; // Reseta o estado da resposta
+          _respostaCorreta = false;
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -76,28 +73,31 @@ class _VocabularioPageState extends State<VocabularioPage> {
     }
   }
 
-  void _verificarResposta() {
+  Future<void> _verificarResposta() async {
     final respostaUsuario = _respostaController.text.trim();
-    if (respostaUsuario.toLowerCase() == _traducaoCorreta?.toLowerCase()) {
+    final fraseTraduzida = await TranslationHelper.translateText(_fraseAtual!);
+    bool respostaCorreta =
+        respostaUsuario.toLowerCase() == fraseTraduzida.toLowerCase();
+
+    print("resposta usuario: " + respostaUsuario);
+    print(fraseTraduzida);
+    print(respostaCorreta);
+
+    if (respostaCorreta) {
       setState(() {
         _respostaCorreta = true;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta correta!')),
       );
-
-      // Navega para a página de escuta após 1 segundo
-      Future.delayed(Duration(seconds: 1), () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => EscutaPage()),
-        );
-      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta incorreta! Tente novamente.')),
       );
     }
+
+    // Chama a função onRespostaVerificada passando o resultado da resposta
+    widget.onRespostaVerificada(respostaCorreta);
   }
 
   @override

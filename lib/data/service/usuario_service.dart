@@ -81,21 +81,23 @@ class UsuarioService {
         throw Exception('Usuário não encontrado');
       }
 
-      // Calcula os novos pontos e rank
-      const int basePoints = 15;
-      const int pointsPerLife = 3;
-      const int penaltyPerError = 3;
-      print("Estou aqui");
-      int pointsEarned =
-          basePoints + (livesUsed * pointsPerLife); // 15 + 2*3 = 21
-      print(pointsEarned);
-      int pointsLost =
-          basePoints - (correctAnswers * penaltyPerError); // 15 - 8*5 = -25
-      print(pointsLost);
+      // Constantes para cálculo de pontos
+      const int pointsPerCorrectAnswer = 10; // Pontos por resposta correta
+      const int penaltyPerLifeLost = 5; // Penalidade por vida perdida
 
+      // Calcula os pontos ganhos com base nas respostas corretas
+      int pointsEarned = correctAnswers * pointsPerCorrectAnswer;
+
+      // Calcula os pontos perdidos com base nas vidas perdidas
+      int pointsLost = livesUsed * penaltyPerLifeLost;
+
+      // Calcula os novos pontos
       int newPoints = perfil.points + pointsEarned - pointsLost;
-      print(newPoints);
-      int newLives = perfil.lives - livesUsed;
+
+      // Garante que os pontos não sejam negativos
+      if (newPoints < 0) {
+        newPoints = 0;
+      }
 
       // Atualiza o rank com base nos pontos
       String newRank = _calculateRank(newPoints);
@@ -103,7 +105,6 @@ class UsuarioService {
       // Atualiza o perfil do usuário
       Perfil updatedPerfil = perfil.copyWith(
         points: newPoints,
-        lives: newLives,
         rank: newRank,
       );
 

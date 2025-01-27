@@ -1,13 +1,16 @@
-// lib/presentation/pages/escuta_page.dart
 import 'package:fluent_chat/domain/repositories/auth_repository.dart';
 import 'package:fluent_chat/domain/repositories/usuario_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluent_chat/domain/repositories/texto_repository.dart';
 import 'package:fluent_chat/domain/repositories/tts_repository.dart';
-import 'fala_page.dart'; // Importe a página de fala
 
 class EscutaPage extends StatefulWidget {
+  final Function(bool)
+      onRespostaVerificada; // Parâmetro para verificação da resposta
+
+  EscutaPage({required this.onRespostaVerificada}); // Construtor atualizado
+
   @override
   _EscutaPageState createState() => _EscutaPageState();
 }
@@ -41,11 +44,10 @@ class _EscutaPageState extends State<EscutaPage> {
       if (perfil != null) {
         _rankUser = perfil.rank;
       }
-      // Busca uma frase aleatória
       final textoRepository =
           Provider.of<TextoRepository>(context, listen: false);
-      final frase = await textoRepository.buscarFraseAleatoria(
-          _rankUser.toLowerCase()); // Use o rank do usuário
+      final frase =
+          await textoRepository.buscarFraseAleatoria(_rankUser.toLowerCase());
 
       setState(() {
         _fraseAtual = frase;
@@ -70,26 +72,24 @@ class _EscutaPageState extends State<EscutaPage> {
 
   void _verificarResposta() {
     final respostaUsuario = _respostaController.text.trim();
-    if (respostaUsuario.toLowerCase() == _fraseAtual?.toLowerCase()) {
+    bool respostaCorreta =
+        respostaUsuario.toLowerCase() == _fraseAtual?.toLowerCase();
+
+    if (respostaCorreta) {
       setState(() {
         _respostaCorreta = true;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta correta!')),
       );
-
-      // Navega para a página de fala após 1 segundo
-      Future.delayed(Duration(seconds: 1), () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FalaPage()),
-        );
-      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta incorreta! Tente novamente.')),
       );
     }
+
+    // Chama a função onRespostaVerificada passando o resultado da resposta
+    widget.onRespostaVerificada(respostaCorreta);
   }
 
   @override
@@ -107,7 +107,6 @@ class _EscutaPageState extends State<EscutaPage> {
             if (_carregando)
               Center(child: CircularProgressIndicator())
             else if (_fraseAtual != null) ...[
-              // Botão de play para reproduzir o áudio
               Center(
                 child: IconButton(
                   icon: Icon(Icons.play_circle_filled, size: 64.0),
@@ -115,7 +114,6 @@ class _EscutaPageState extends State<EscutaPage> {
                 ),
               ),
               SizedBox(height: 20.0),
-              // Campo de texto para a resposta do usuário
               TextField(
                 controller: _respostaController,
                 decoration: InputDecoration(
@@ -124,7 +122,6 @@ class _EscutaPageState extends State<EscutaPage> {
                 ),
               ),
               SizedBox(height: 20.0),
-              // Botão para verificar a resposta
               ElevatedButton(
                 onPressed: _verificarResposta,
                 child: Text('Verificar Resposta'),
