@@ -7,8 +7,12 @@ import 'package:fluent_chat/domain/repositories/speech_repository.dart';
 
 class FalaPage extends StatefulWidget {
   final Function(bool) onRespostaVerificada;
+  final Function(String) onFraseCarregada; // Novo callback
 
-  FalaPage({required this.onRespostaVerificada});
+  FalaPage({
+    required this.onRespostaVerificada,
+    required this.onFraseCarregada, // Adicionado no construtor
+  });
 
   @override
   _FalaPageState createState() => _FalaPageState();
@@ -53,6 +57,9 @@ class _FalaPageState extends State<FalaPage> {
       setState(() {
         _fraseAtual = frase;
       });
+
+      // Chama o callback para passar a frase carregada
+      widget.onFraseCarregada(frase);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao carregar a frase: $e')),

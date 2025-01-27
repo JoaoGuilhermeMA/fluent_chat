@@ -43,4 +43,30 @@ class UsuarioRepositoryImpl extends UsuarioRepository {
       correctAnswers: correctAnswers,
     );
   }
+
+  @override
+  Future<List<Map<String, dynamic>>> buscarHistorico(String userId) {
+    return _usuarioService.buscarHistorico(userId);
+  }
+
+  @override
+  Future<void> salvarHistoricoPartida(
+      {required String userId,
+      required String rankAtual,
+      required String fraseVocabulario,
+      required String fraseEscuta,
+      required String fraseFala,
+      required int pontosGanhos,
+      required int pontosPerdidos,
+      required bool ganhou}) async {
+    _usuarioService.salvarHistoricoPartida(
+        userId: userId,
+        rankAtual: rankAtual,
+        fraseVocabulario: fraseVocabulario,
+        fraseEscuta: fraseEscuta,
+        fraseFala: fraseFala,
+        pontosGanhos: pontosGanhos,
+        pontosPerdidos: pontosPerdidos,
+        ganhou: ganhou);
+  }
 }

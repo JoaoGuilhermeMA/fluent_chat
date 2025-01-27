@@ -119,6 +119,90 @@ class UsuarioService {
     }
   }
 
+  // Método para salvar o histórico de partidas
+  Future<void> salvarHistoricoPartida({
+    required String userId,
+    required String rankAtual,
+    required String fraseVocabulario,
+    required String fraseEscuta,
+    required String fraseFala,
+    required int pontosGanhos,
+    required int pontosPerdidos,
+    required bool ganhou,
+  }) async {
+    try {
+      // Obtém o número da próxima partida
+      int numeroPartida = await _obterProximoNumeroPartida(userId);
+
+      // Cria o nome do documento da partida
+      String nomeDocumento = 'partida$numeroPartida';
+
+      // Cria um mapa com os dados da partida
+      Map<String, dynamic> partidaData = {
+        'timestamp': FieldValue.serverTimestamp(), // Timestamp do Firestore
+        'rank': rankAtual,
+        'fraseVocabulario': fraseVocabulario,
+        'fraseEscuta': fraseEscuta,
+        'fraseFala': fraseFala,
+        'pontosGanhos': pontosGanhos,
+        'pontosPerdidos': pontosPerdidos,
+        'ganhou': ganhou,
+      };
+
+      // Salva a partida na subcoleção "historico"
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('historico')
+          .doc(nomeDocumento)
+          .set(partidaData);
+
+      print('Histórico da partida salvo com sucesso.');
+    } catch (e) {
+      print('Erro ao salvar histórico da partida: $e');
+    }
+  }
+
+  // Método para obter o próximo número de partida
+  Future<int> _obterProximoNumeroPartida(String userId) async {
+    try {
+      // Obtém a subcoleção "historico" do usuário
+      QuerySnapshot historicoSnapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('historico')
+          .get();
+
+      // O próximo número de partida é o número de documentos + 1
+      return historicoSnapshot.size + 1;
+    } catch (e) {
+      print('Erro ao obter próximo número de partida: $e');
+      return 1; // Se houver erro, começa com 1
+    }
+  }
+
+  // Método para buscar o histórico de partidas do usuário
+  Future<List<Map<String, dynamic>>> buscarHistorico(String userId) async {
+    try {
+      // Referência para a subcoleção 'historico' do usuário
+      CollectionReference historicoRef =
+          _firestore.collection('users').doc(userId).collection('historico');
+
+      // Obtém todos os documentos da subcoleção
+      QuerySnapshot historicoSnapshot = await historicoRef.get();
+
+      // Converte os documentos para uma lista de mapas
+      List<Map<String, dynamic>> historico = historicoSnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+
+      return historico;
+    } catch (e) {
+      print('Erro ao buscar histórico: $e');
+      return [];
+    }
+  }
+
   // Método para calcular o rank com base nos pontos
   String _calculateRank(int points) {
     if (points >= 800) return 'Radiante';

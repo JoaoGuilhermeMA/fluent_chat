@@ -7,8 +7,12 @@ import 'package:provider/provider.dart';
 
 class VocabularioPage extends StatefulWidget {
   final Function(bool) onRespostaVerificada;
+  final Function(String) onFraseCarregada; // Novo callback
 
-  VocabularioPage({required this.onRespostaVerificada});
+  VocabularioPage({
+    required this.onRespostaVerificada,
+    required this.onFraseCarregada, // Adicionado no construtor
+  });
 
   @override
   _VocabularioPageState createState() => _VocabularioPageState();
@@ -52,6 +56,9 @@ class _VocabularioPageState extends State<VocabularioPage> {
         setState(() {
           _fraseAtual = frase;
         });
+
+        // Chama o callback para passar a frase carregada
+        widget.onFraseCarregada(frase);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Usuário não encontrado')),

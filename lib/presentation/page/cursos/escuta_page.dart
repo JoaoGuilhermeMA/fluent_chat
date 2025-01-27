@@ -8,8 +8,12 @@ import 'package:fluent_chat/domain/repositories/tts_repository.dart';
 class EscutaPage extends StatefulWidget {
   final Function(bool)
       onRespostaVerificada; // Parâmetro para verificação da resposta
+  final Function(String) onFraseCarregada; // Novo callback
 
-  EscutaPage({required this.onRespostaVerificada}); // Construtor atualizado
+  EscutaPage({
+    required this.onRespostaVerificada,
+    required this.onFraseCarregada, // Adicionado no construtor
+  });
 
   @override
   _EscutaPageState createState() => _EscutaPageState();
@@ -52,6 +56,9 @@ class _EscutaPageState extends State<EscutaPage> {
       setState(() {
         _fraseAtual = frase;
       });
+
+      // Chama o callback para passar a frase carregada
+      widget.onFraseCarregada(frase);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao carregar a frase: $e')),

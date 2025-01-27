@@ -18,4 +18,24 @@ abstract class UsuarioRepository {
     required int livesUsed,
     required int correctAnswers,
   });
+
+  Future<void> salvarHistoricoPartida({
+    required String userId,
+    required String rankAtual,
+    required String fraseVocabulario,
+    required String fraseEscuta,
+    required String fraseFala,
+    required int pontosGanhos,
+    required int pontosPerdidos,
+    required bool ganhou,
+  });
+
+  // Método para obter o próximo número de partida
+  Future<int> _obterProximoNumeroPartida(String userId);
+
+  // Método para buscar o histórico de partidas do usuário
+  Future<List<Map<String, dynamic>>> buscarHistorico(String userId);
+
+  // Método para calcular o rank com base nos pontos
+  String _calculateRank(int points);
 }
