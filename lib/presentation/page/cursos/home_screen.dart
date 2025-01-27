@@ -1,4 +1,3 @@
-// lib/presentation/pages/home_page.dart
 import 'package:fluent_chat/presentation/page/cursos/exercicio_page.dart';
 import 'package:fluent_chat/presentation/page/cursos/gramatica_screen.dart';
 import 'package:fluent_chat/presentation/page/cursos/palavra_cruzada_tela.dart';
@@ -48,6 +47,34 @@ class HomePage extends StatelessWidget {
               title: 'Desafio Diário',
               description: 'Complete o desafio de hoje e ganhe pontos.',
               onTap: () {
+                _showDailyChallengeDialog(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDailyChallengeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Desafio Diário"),
+          content: Text(
+              "Você deseja iniciar o desafio diário? Você terá apenas 5 minutos para completá-lo."),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Não"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o diálogo
+              },
+            ),
+            TextButton(
+              child: Text("Sim"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o diálogo
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PalavraCruzadaTela()),
@@ -55,8 +82,8 @@ class HomePage extends StatelessWidget {
               },
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 }
