@@ -1,6 +1,7 @@
 // lib/presentation/widgets/ranking_card.dart
 import 'package:fluent_chat/domain/entities/perfil.dart';
 import 'package:fluent_chat/domain/repositories/auth_repository.dart';
+import 'package:fluent_chat/presentation/page/cursos/ranking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../domain/repositories/usuario_repository.dart';
@@ -72,6 +73,10 @@ class _RankingCardState extends State<RankingCard> {
                 ElevatedButton(
                   onPressed: () {
                     // Navegar para a página de ranking completo
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RankingScreen()),
+                    );
                   },
                   child: Text('Ver Ranking Completo'),
                 ),

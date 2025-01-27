@@ -38,4 +38,6 @@ abstract class UsuarioRepository {
 
   // Método para calcular o rank com base nos pontos
   String _calculateRank(int points);
+
+  Future<List<Perfil>> buscarTodosUsuariosOrdenadosPorPontos();
 }

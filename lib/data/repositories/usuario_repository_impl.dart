@@ -69,4 +69,8 @@ class UsuarioRepositoryImpl extends UsuarioRepository {
         pontosPerdidos: pontosPerdidos,
         ganhou: ganhou);
   }
+
+  Future<List<Perfil>> buscarTodosUsuariosOrdenadosPorPontos() {
+    return _usuarioService.buscarTodosUsuariosOrdenadosPorPontos();
+  }
 }

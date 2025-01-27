@@ -211,4 +211,26 @@ class UsuarioService {
     if (points >= 200) return 'Prata';
     return 'Bronze';
   }
+
+// Método para buscar todos os usuários ordenados por pontos
+  Future<List<Perfil>> buscarTodosUsuariosOrdenadosPorPontos() async {
+    try {
+      // Obtém todos os documentos da coleção 'users'
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('users')
+          .orderBy('points',
+              descending: true) // Ordena por pontos (decrescente)
+          .get();
+
+      // Converte os documentos para uma lista de Perfil
+      List<Perfil> usuarios = querySnapshot.docs
+          .map((doc) => Perfil.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      return usuarios;
+    } catch (e) {
+      print('Erro ao buscar usuários: $e');
+      return [];
+    }
+  }
 }
