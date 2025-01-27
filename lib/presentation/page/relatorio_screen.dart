@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluent_chat/domain/repositories/usuario_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
@@ -24,16 +25,10 @@ class _RelatorioScreenState extends State<RelatorioScreen> {
   }
 
   Future<List<Map<String, dynamic>>> _fetchPartidas() async {
-    QuerySnapshot partidasSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('historico')
-        .orderBy('timestamp', descending: true)
-        .get();
-
-    return partidasSnapshot.docs
-        .map((doc) => doc.data() as Map<String, dynamic>)
-        .toList();
+    // Use o Provider para acessar o usuarioRepository
+    final usuarioRepository =
+        Provider.of<UsuarioRepository>(context, listen: false);
+    return await usuarioRepository.buscarHistorico(userId);
   }
 
   @override
@@ -122,6 +117,51 @@ class _RelatorioScreenState extends State<RelatorioScreen> {
                     const SizedBox(width: 20),
                     _buildLegendItem(Colors.red, 'Pontos Perdidos'),
                   ],
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Detalhes das Partidas',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: partidas.length,
+                    itemBuilder: (context, index) {
+                      final partida = partidas[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Partida ${index + 1}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text('Frase Escuta: ${partida['fraseEscuta']}'),
+                              Text('Frase Fala: ${partida['fraseFala']}'),
+                              Text(
+                                  'Frase Vocabulário: ${partida['fraseVocabulario']}'),
+                              Text(
+                                  'Ganhou: ${partida['ganhou'] ? 'Sim' : 'Não'}'),
+                              Text('Pontos Ganhos: ${partida['pontosGanhos']}'),
+                              Text(
+                                  'Pontos Perdidos: ${partida['pontosPerdidos']}'),
+                              Text('Rank: ${partida['rank']}'),
+                              Text(
+                                  'Data: ${partida['timestamp'].toDate().toString()}'),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
