@@ -6,13 +6,12 @@ import 'package:fluent_chat/domain/repositories/texto_repository.dart';
 import 'package:fluent_chat/domain/repositories/tts_repository.dart';
 
 class EscutaPage extends StatefulWidget {
-  final Function(bool)
-      onRespostaVerificada; // Parâmetro para verificação da resposta
-  final Function(String) onFraseCarregada; // Novo callback
+  final Function(bool) onRespostaVerificada;
+  final Function(String) onFraseCarregada;
 
   EscutaPage({
     required this.onRespostaVerificada,
-    required this.onFraseCarregada, // Adicionado no construtor
+    required this.onFraseCarregada,
   });
 
   @override
@@ -57,7 +56,6 @@ class _EscutaPageState extends State<EscutaPage> {
         _fraseAtual = frase;
       });
 
-      // Chama o callback para passar a frase carregada
       widget.onFraseCarregada(frase);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -95,15 +93,24 @@ class _EscutaPageState extends State<EscutaPage> {
       );
     }
 
-    // Chama a função onRespostaVerificada passando o resultado da resposta
     widget.onRespostaVerificada(respostaCorreta);
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercício de Escuta'),
+        title: Text(
+          'Exercício de Escuta',
+          style: textTheme.headlineSmall?.copyWith(
+            color: colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: colorScheme.primary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -112,26 +119,70 @@ class _EscutaPageState extends State<EscutaPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (_carregando)
-              Center(child: CircularProgressIndicator())
-            else if (_fraseAtual != null) ...[
               Center(
-                child: IconButton(
-                  icon: Icon(Icons.play_circle_filled, size: 64.0),
-                  onPressed: _reproduzirAudio,
+                child: CircularProgressIndicator(
+                  color: colorScheme.primary,
+                ),
+              )
+            else if (_fraseAtual != null) ...[
+              Card(
+                elevation: 4.0,
+                color: colorScheme.surfaceVariant,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.play_circle_filled,
+                          size: 64.0,
+                          color: colorScheme.primary,
+                        ),
+                        onPressed: _reproduzirAudio,
+                      ),
+                      const SizedBox(height: 10.0),
+                      Text(
+                        'Clique no ícone para ouvir a frase',
+                        style: textTheme.titleMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextField(
                 controller: _respostaController,
                 decoration: InputDecoration(
                   labelText: 'Digite o que você ouviu',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: colorScheme.onSurface),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: colorScheme.outline),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: colorScheme.primary),
+                  ),
                 ),
+                style: TextStyle(color: colorScheme.onSurface),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: _verificarResposta,
-                child: Text('Verificar Resposta'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: Text(
+                  'Verificar Resposta',
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ],

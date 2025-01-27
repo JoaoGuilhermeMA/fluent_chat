@@ -1,8 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:fluent_chat/presentation/page/chats/comunidade_page.dart';
 import 'package:fluent_chat/presentation/page/cursos/home_screen.dart';
 import 'package:fluent_chat/presentation/page/perfil_page.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class TelaInicial extends StatefulWidget {
   const TelaInicial({super.key, required this.title});
@@ -30,15 +29,21 @@ class _MyHomePageState extends State<TelaInicial> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Fluent Chat"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(
+          "Fluent Chat",
+          style: TextStyle(color: colorScheme.onPrimary),
+        ),
+        backgroundColor: colorScheme.primary,
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: NavigationBar(
+        backgroundColor: colorScheme.surface,
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: "Cursos"),
           NavigationDestination(icon: Icon(Icons.people), label: 'Comunidade'),

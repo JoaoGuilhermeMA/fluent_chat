@@ -8,6 +8,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -24,6 +27,9 @@ class HomePage extends StatelessWidget {
                 onTap: () {
                   NavigationHandler.navigateToPraticarPage(context);
                 },
+                backgroundColor: colorScheme.primaryContainer,
+                iconColor: colorScheme.onPrimaryContainer,
+                textColor: colorScheme.onPrimaryContainer,
               ),
               const SizedBox(height: 20.0),
               SectionCard(
@@ -34,6 +40,9 @@ class HomePage extends StatelessWidget {
                 onTap: () {
                   NavigationHandler.navigateToGrammarScreen(context);
                 },
+                backgroundColor: colorScheme.secondaryContainer,
+                iconColor: colorScheme.onSecondaryContainer,
+                textColor: colorScheme.onSecondaryContainer,
               ),
               const SizedBox(height: 20.0),
               SectionCard(
@@ -50,6 +59,9 @@ class HomePage extends StatelessWidget {
                     },
                   );
                 },
+                backgroundColor: colorScheme.tertiaryContainer,
+                iconColor: colorScheme.onTertiaryContainer,
+                textColor: colorScheme.onTertiaryContainer,
               ),
             ],
           ),
@@ -60,21 +72,37 @@ class HomePage extends StatelessWidget {
 
   void _showConfirmationDialog(
       BuildContext context, String title, String message, Function onConfirm) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(title),
-          content: Text(message),
+          backgroundColor: colorScheme.surface,
+          title: Text(
+            title,
+            style: textTheme.titleLarge?.copyWith(color: colorScheme.onSurface),
+          ),
+          content: Text(
+            message,
+            style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
+          ),
           actions: <Widget>[
             TextButton(
-              child: Text("Não"),
+              child: Text(
+                "Não",
+                style: TextStyle(color: colorScheme.error),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(); // Fecha o diálogo
               },
             ),
             TextButton(
-              child: Text("Sim"),
+              child: Text(
+                "Sim",
+                style: TextStyle(color: colorScheme.primary),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(); // Fecha o diálogo
                 onConfirm();

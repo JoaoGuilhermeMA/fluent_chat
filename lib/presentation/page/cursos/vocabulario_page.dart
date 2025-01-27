@@ -7,11 +7,11 @@ import 'package:provider/provider.dart';
 
 class VocabularioPage extends StatefulWidget {
   final Function(bool) onRespostaVerificada;
-  final Function(String) onFraseCarregada; // Novo callback
+  final Function(String) onFraseCarregada;
 
   VocabularioPage({
     required this.onRespostaVerificada,
-    required this.onFraseCarregada, // Adicionado no construtor
+    required this.onFraseCarregada,
   });
 
   @override
@@ -57,7 +57,6 @@ class _VocabularioPageState extends State<VocabularioPage> {
           _fraseAtual = frase;
         });
 
-        // Chama o callback para passar a frase carregada
         widget.onFraseCarregada(frase);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -81,12 +80,7 @@ class _VocabularioPageState extends State<VocabularioPage> {
     bool respostaCorreta =
         respostaUsuario.toLowerCase() == fraseTraduzida.toLowerCase();
 
-    print("resposta usuario: " + respostaUsuario);
-    print(fraseTraduzida);
-    print(respostaCorreta);
-
     if (respostaCorreta) {
-      setState(() {});
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta correta!')),
       );
@@ -96,45 +90,85 @@ class _VocabularioPageState extends State<VocabularioPage> {
       );
     }
 
-    // Chama a função onRespostaVerificada passando o resultado da resposta
     widget.onRespostaVerificada(respostaCorreta);
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Exercício de Vocabulário'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (_carregando)
-              Center(child: CircularProgressIndicator())
+              Center(
+                child: CircularProgressIndicator(
+                  color: colorScheme.primary,
+                ),
+              )
             else if (_fraseAtual != null) ...[
-              Text(
-                'Traduza a frase:',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              Card(
+                elevation: 4.0,
+                color: colorScheme.surfaceVariant,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Traduza a frase:',
+                        style: textTheme.titleLarge?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Text(
+                        _fraseAtual!,
+                        style: textTheme.headlineSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              SizedBox(height: 10.0),
-              Text(
-                _fraseAtual!,
-                style: TextStyle(fontSize: 24.0),
-              ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextField(
                 controller: _respostaController,
                 decoration: InputDecoration(
                   labelText: 'Sua tradução',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: colorScheme.onSurface),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: colorScheme.outline),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: colorScheme.primary),
+                  ),
                 ),
+                style: TextStyle(color: colorScheme.onSurface),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: _verificarResposta,
-                child: Text('Verificar Resposta'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: Text(
+                  'Verificar Resposta',
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ],

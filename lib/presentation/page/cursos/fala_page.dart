@@ -7,11 +7,11 @@ import 'package:fluent_chat/domain/repositories/speech_repository.dart';
 
 class FalaPage extends StatefulWidget {
   final Function(bool) onRespostaVerificada;
-  final Function(String) onFraseCarregada; // Novo callback
+  final Function(String) onFraseCarregada;
 
   FalaPage({
     required this.onRespostaVerificada,
-    required this.onFraseCarregada, // Adicionado no construtor
+    required this.onFraseCarregada,
   });
 
   @override
@@ -58,7 +58,6 @@ class _FalaPageState extends State<FalaPage> {
         _fraseAtual = frase;
       });
 
-      // Chama o callback para passar a frase carregada
       widget.onFraseCarregada(frase);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -90,10 +89,7 @@ class _FalaPageState extends State<FalaPage> {
   }
 
   void _verificarResposta() {
-    // Remove o ponto final da frase original (se houver)
     String fraseSemPonto = _fraseAtual?.replaceAll(RegExp(r'\.$'), '') ?? '';
-
-    // Compara o texto reconhecido com a frase sem o ponto final
     bool respostaCorreta =
         _textoReconhecido.toLowerCase() == fraseSemPonto.toLowerCase();
 
@@ -110,15 +106,24 @@ class _FalaPageState extends State<FalaPage> {
       );
     }
 
-    // Chama a função onRespostaVerificada passando o resultado da resposta
     widget.onRespostaVerificada(respostaCorreta);
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercício de Fala'),
+        title: Text(
+          'Exercício de Fala',
+          style: textTheme.headlineSmall?.copyWith(
+            color: colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: colorScheme.primary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -127,43 +132,93 @@ class _FalaPageState extends State<FalaPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (_carregando)
-              Center(child: CircularProgressIndicator())
+              Center(
+                child: CircularProgressIndicator(
+                  color: colorScheme.primary,
+                ),
+              )
             else if (_fraseAtual != null) ...[
-              Text(
-                'Fale a frase:',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              Card(
+                elevation: 4.0,
+                color: colorScheme.surfaceVariant,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Fale a frase:',
+                        style: textTheme.titleLarge?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Text(
+                        _fraseAtual!,
+                        style: textTheme.headlineSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              SizedBox(height: 10.0),
-              Text(
-                _fraseAtual!,
-                style: TextStyle(fontSize: 24.0),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Center(
                 child: IconButton(
                   icon: Icon(
                     _isListening ? Icons.mic : Icons.mic_none,
                     size: 64.0,
+                    color: colorScheme.primary,
                   ),
                   onPressed: _iniciarReconhecimento,
                 ),
               ),
-              SizedBox(height: 20.0),
-              Text(
-                'Você disse:',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              const SizedBox(height: 20.0),
+              Card(
+                elevation: 4.0,
+                color: colorScheme.surfaceVariant,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Você disse:',
+                        style: textTheme.titleMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Text(
+                        _textoReconhecido,
+                        style: textTheme.bodyLarge?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              SizedBox(height: 10.0),
-              Text(
-                _textoReconhecido,
-                style: TextStyle(fontSize: 20.0),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: _verificarResposta,
-                child: Text('Verificar Resposta'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: Text(
+                  'Verificar Resposta',
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ],

@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.chat_outlined,
+              Icons.person_2,
               size: 150,
               color: Theme.of(context).colorScheme.primary,
             ),
