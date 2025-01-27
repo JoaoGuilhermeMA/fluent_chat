@@ -1,5 +1,6 @@
 // lib/presentation/pages/home_page.dart
 import 'package:fluent_chat/presentation/page/cursos/exercicio_page.dart';
+import 'package:fluent_chat/presentation/page/palavra_cruzada_tela.dart';
 import 'package:flutter/material.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/ranking_card.dart';
@@ -34,7 +35,10 @@ class HomePage extends StatelessWidget {
               title: 'Vocabulário',
               description: 'Aprenda novas palavras diariamente.',
               onTap: () {
-                // Navegar para a página de vocabulário
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PalavraCruzadaTela()),
+                );
               },
             ),
             SizedBox(height: 20.0),
@@ -43,7 +47,10 @@ class HomePage extends StatelessWidget {
               title: 'Desafio Diário',
               description: 'Complete o desafio de hoje e ganhe pontos.',
               onTap: () {
-                // Navegar para a página do desafio diário
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PalavraCruzadaTela()),
+                );
               },
             ),
           ],

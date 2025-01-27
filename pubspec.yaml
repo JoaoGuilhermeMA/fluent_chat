@@ -48,6 +48,7 @@ dependencies:
   infinite_scroll_pagination: ^4.1.0
   translator: ^1.0.3+1
   flutter_tts: ^4.2.1
+  crossword_generator: ^1.2.0
 
 dev_dependencies:
   flutter_test:
